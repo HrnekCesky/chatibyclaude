@@ -430,6 +430,15 @@ HTML = r"""
 def index():
     return render_template_string(HTML)
 
+
+@app.route("/api/messages")
+def api_messages():
+    from flask import jsonify
+    room  = request.args.get("room", "general")
+    limit = min(int(request.args.get("limit", 5)), 20)
+    msgs  = load_history(room, limit)
+    return jsonify(msgs)
+
 @socketio.on("auth")
 def on_auth(data):
     action   = data.get("action", "")
