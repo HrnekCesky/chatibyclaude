@@ -439,6 +439,14 @@ def api_messages():
     msgs  = load_history(room, limit)
     return jsonify(msgs)
 
+@app.route("/admin")
+def admin():
+    with get_db() as conn:
+      rowas = conn.execute(
+          "SELECT * FROM users"
+      ).fetchall()
+    return [dict(w) for w in reversed(rowas)]
+
 @socketio.on("auth")
 def on_auth(data):
     action   = data.get("action", "")
